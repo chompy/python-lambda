@@ -6,7 +6,7 @@ import os
 import sys
 import time
 from imp import load_source
-from shutil import copy, copyfile
+from shutil import copy, copyfile, copytree
 from tempfile import mkdtemp
 
 import botocore
@@ -206,6 +206,17 @@ def build(src, requirements=False, local_package=None):
                 continue
             print("Bundling: %r" % filename)
             files.append(os.path.join(src, filename))
+
+    # include additional directories
+    include_paths = cfg.get('include_directories', [])
+    for include_path in include_paths:
+        if not os.path.isdir(include_path):
+            continue
+        print("Bundling: %r" % include_path)
+        copytree(
+            include_path,
+            os.path.join(path_to_temp, include_path)
+        )
 
     # "cd" into `temp_path` directory.
     os.chdir(path_to_temp)

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
+import stat
 import zipfile
 import datetime as dt
-
 
 def mkdir(path):
     if not os.path.exists(path):
@@ -22,7 +22,12 @@ def archive(src, dest, filename):
 
     for root, _, files in os.walk(src):
         for file in files:
-            zfh.write(os.path.join(root, file))
+            filePath = os.path.join(root, file)
+            zfh.write(filePath)
+            # set global read+write+execute permissions (needed to execute binaries)
+            # TODO: set permission from file
+            info = zfh.getinfo(filePath.strip("./"))
+            info.external_attr = 0777 << 16L
     zfh.close()
     return os.path.join(dest, filename)
 
