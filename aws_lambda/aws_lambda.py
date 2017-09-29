@@ -147,7 +147,7 @@ def init(src, minimal=False):
     templates_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "project_templates")
     for filename in os.listdir(templates_path):
-        if (minimal and filename == 'event.json') or filename.endswith('.pyc'):
+        if (minimal and filename == 'event.json') or filename.endswith('.pyc') or filename.endswith('.gitignore'):
             continue
         dest_path = os.path.join(templates_path, filename)
 
