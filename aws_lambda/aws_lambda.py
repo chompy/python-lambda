@@ -147,7 +147,7 @@ def init(src, minimal=False):
     templates_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "project_templates")
     for filename in os.listdir(templates_path):
-        if (minimal and filename == 'event.json') or filename.endswith('.pyc') or filename.endswith('.gitignore'):
+        if (minimal and filename == 'event.json') or filename.endswith('.pyc'):
             continue
         dest_path = os.path.join(templates_path, filename)
 
@@ -203,6 +203,8 @@ def build(src, requirements=False, local_package=None):
             if filename == '.DS_Store':
                 continue
             if filename == 'config.yaml':
+                continue
+            if filename == '.gitignore':
                 continue
             print("Bundling: %r" % filename)
             files.append(os.path.join(src, filename))
