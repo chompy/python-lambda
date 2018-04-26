@@ -15,9 +15,11 @@ import pip
 import yaml
 
 try: # for pip >= 10
-    from pip._internal.operations.freeze import freeze
+    from pip._internal import main as pip_main
+    from pip._internal.operations.freeze import freeze as pip_freeze
 except ImportError: # for pip <= 9.0.3
-    from pip.operations.freeze import freeze
+    from pip import main as pip_main
+    from pip.operations.freeze import freeze as pip_freeze
 
 from .helpers import mkdir, read, archive, timestamp
 
@@ -290,7 +292,7 @@ def _install_packages(path, packages):
             package = package.replace('-e ', '')
 
         print('Installing {package}'.format(package=package))
-        pip.main(['install', package, '-t', path, '--ignore-installed'])
+        pip_main(['install', package, '-t', path, '--ignore-installed'])
 
 
 def pip_install_to_target(path, requirements=False, local_package=None):
@@ -312,7 +314,7 @@ def pip_install_to_target(path, requirements=False, local_package=None):
     packages = []
     if not requirements:
         print('Gathering pip packages')
-        packages.extend(freeze())
+        packages.extend(pip_freeze())
     else:
         if os.path.exists("requirements.txt"):
             print('Gathering requirement packages')
