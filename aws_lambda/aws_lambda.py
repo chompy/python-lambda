@@ -14,6 +14,11 @@ import boto3
 import pip
 import yaml
 
+try: # for pip >= 10
+    from pip._internal.operations.freeze import freeze
+except ImportError: # for pip <= 9.0.3
+    from pip.operations.freeze import freeze
+
 from .helpers import mkdir, read, archive, timestamp
 
 
@@ -307,7 +312,7 @@ def pip_install_to_target(path, requirements=False, local_package=None):
     packages = []
     if not requirements:
         print('Gathering pip packages')
-        packages.extend(pip.operations.freeze.freeze())
+        packages.extend(freeze())
     else:
         if os.path.exists("requirements.txt"):
             print('Gathering requirement packages')
